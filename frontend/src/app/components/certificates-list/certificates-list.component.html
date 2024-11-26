@@ -1,0 +1,25 @@
+<div class="p-10">
+  <h1 class="text-3xl pb-6">Certificates</h1>
+  <div class="flex-row">
+    <div class="overflow-x-auto rounded-lg border border-gray-200">
+      <table class="min-w-full divide-y-2 divide-gray-200 bg-white text-sm">
+        <thead class="text-left">
+        <th class="whitespace-nowrap px-4 py-2 font-medium text-gray-900">
+          Journalist Name
+        </th>
+        <th class="whitespace-nowrap px-4 py-2 font-medium text-gray-900">
+          Revoke certificate
+        </th>
+        </thead>
+
+        <tbody class="divide-y divide-gray-200">
+        <tr *ngFor="let certificate of certificates">
+          <td class="whitespace-nowrap px-4 py-2 font-medium text-gray-900">{{certificate.certificateHolder?.firstName}} {{certificate.certificateHolder?.lastName}}
+          </td>
+          <td class="whitespace-nowrap px-4 py-2 text-gray-700"><button class="italic" (click)="revokeCertificate(certificate.id)">Revoke</button></td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

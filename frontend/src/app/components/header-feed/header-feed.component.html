@@ -1,0 +1,68 @@
+<div class="flex justify-center gap-2 pb-2">
+  <div class="relative hidden sm:block w-fit">
+    <label class="sr-only" for="search"> Search </label>
+
+    <input
+      class="h-10 w-full rounded-lg border-none bg-white pe-10 ps-4 text-sm shadow-sm sm:w-56"
+      id="search"
+      type="search"
+      placeholder="Search..."
+      [(ngModel)]="query"
+      (keyup.enter)="search()"
+    />
+
+    <button
+      type="button"
+      class="absolute end-1 top-1/2 -translate-y-1/2 rounded-md p-2.5 text-gray-600 transition hover:text-gray-700"
+      (click)="search()"
+    >
+      <span class="sr-only">Search</span>
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        class="h-4 w-4"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+        stroke-width="2"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+        />
+      </svg>
+    </button>
+  </div>
+
+  <div>
+    <div class="inline-flex rounded-lg border border-gray-100 bg-gray-100 p-1">
+      <button
+        class="inline-block rounded-md px-4 py-2 text-sm focus:relative"
+        [ngClass]="{
+          'bg-white': onlyCommented,
+          'shadow-sm': onlyCommented,
+          'text-blue-500': onlyCommented,
+          'hover:text-gray-700': !onlyCommented,
+          'text-gray-500': !onlyCommented
+        }"
+        (click)="turnOnCommentOnlyMode()"
+      >
+        Only commented
+      </button>
+
+      <button
+        class="inline-block rounded-md px-4 py-2 text-sm focus:relative"
+        [ngClass]="{
+          'bg-white': !onlyCommented,
+          'shadow-sm': !onlyCommented,
+          'text-blue-500': !onlyCommented,
+          'hover:text-gray-700': onlyCommented,
+          'text-gray-500': onlyCommented
+        }"
+        (click)="turnOffCommentOnlyMode()"
+      >
+        All posts
+      </button>
+    </div>
+  </div>
+</div>

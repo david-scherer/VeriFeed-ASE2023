@@ -1,0 +1,3 @@
+0 * * * * root /usr/bin/curl http://127.0.0.1:5003/api/v1/mastodon/scrape >> /var/log/cron.log 2>&1
+0 * * * * root /usr/bin/curl http://127.0.0.1:5003/api/v1/reddit/scrape >> /var/log/cron.log 2>&1
+# WARNING: This file HAS TO BE formatted with Unix (LF) lines AND Dont delete this line plz

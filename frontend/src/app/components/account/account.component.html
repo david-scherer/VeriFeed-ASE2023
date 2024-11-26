@@ -1,0 +1,125 @@
+<div class="px-40 py-28">
+  <h1 class="text-3xl">My Account</h1>
+  <div class="flex-row">
+    <div class="py-5">
+      <h2 class="text-2xl pb-5">Update Account Information</h2>
+      <form (ngSubmit)="updateAccount()" [formGroup]="userForm" class="mt-8 grid grid-cols-6 gap-6">
+
+        <div class="col-span-6">
+          <label
+            for="username"
+            class="block text-sm font-medium text-gray-700"
+          >Username</label
+          >
+          <input
+            id="username"
+            class="mt-1 w-full rounded-md border-gray-200 bg-white text-sm text-gray-700 shadow-sm"
+            type="text"
+            matInput
+            formControlName="username"
+            [errorStateMatcher]="matcher"
+            placeholder="Enter your (new) username"
+          />
+          <span
+            class="text-red-600 text-xs"
+            *ngIf="userForm.hasError('required','username')"
+          >Username is required</span>
+        </div>
+
+        <div class="col-span-6 sm:col-span-3">
+          <label
+            for="password"
+            class="block text-sm font-medium text-gray-700"
+          >Password</label
+          >
+          <input
+            id="password"
+            class="mt-1 w-full rounded-md border-gray-200 bg-white text-sm text-gray-700 shadow-sm"
+            type="password"
+            matInput
+            formControlName="password"
+            [errorStateMatcher]="matcher"
+            placeholder="Enter your password (if you want to change it)"
+          />
+          <span
+            class="text-red-600 text-xs"
+            *ngIf="userForm.hasError('required', 'password')"
+          >Password is required</span
+          >
+        </div>
+
+        <div class="col-span-6 sm:col-span-3">
+          <label
+            for="repPassword"
+            class="block text-sm font-medium text-gray-700"
+          >Repeat Password</label
+          >
+          <input
+            id="repPassword"
+            class="mt-1 w-full rounded-md border-gray-200 bg-white text-sm text-gray-700 shadow-sm"
+            type="password"
+            matInput
+            formControlName="repeatPassword"
+            [errorStateMatcher]="matcher"
+            placeholder="Confirm your password"
+          />
+          <span
+            class="text-red-600 text-xs"
+            *ngIf="userForm.hasError('required', 'repeatPassword')"
+          >Confirm your password</span
+          >
+          <span
+            class="text-red-600 text-xs"
+            *ngIf="passwordMatchError"
+          >Passwords do not match</span>
+        </div>
+
+        <div class="col-span-6 sm:flex sm:items-center sm:gap-4">
+          <button type="submit"
+                  class="inline-block shrink-0 rounded-md border border-yellow-500 bg-yellow-500 px-12 py-3 text-sm font-medium text-white transition hover:bg-transparent hover:text-yellow-500 focus:outline-none focus:ring active:text-blue-500">
+            Update Account
+          </button>
+        </div>
+      </form>
+
+      <form class="mt-10">
+        <div>
+          <label
+            for="repPassword"
+            class="block text-sm font-medium text-gray-700"
+          >Profile picture
+          </label>
+
+          <div class="mb-3">
+            <input
+              class="relative mt-1 w-full rounded-md border-gray-200 bg-white text-sm text-gray-700 shadow-sm m-0 block w-full min-w-0 flex-auto rounded border border-solid border-neutral-300 bg-clip-padding px-3 py-[0.32rem] text-base font-normal text-neutral-700 transition duration-300 ease-in-out file:-mx-3 file:-my-[0.32rem] file:overflow-hidden file:rounded-none file:border-0 file:border-solid file:border-inherit file:bg-neutral-100 file:px-3 file:py-[0.32rem] file:text-neutral-700 file:transition file:duration-150 file:ease-in-out file:[border-inline-end-width:1px] file:[margin-inline-end:0.75rem] hover:file:bg-neutral-200 focus:border-primary focus:text-neutral-700 focus:shadow-te-primary focus:outline-none dark:border-neutral-600 dark:text-neutral-200 dark:file:bg-neutral-700 dark:file:text-neutral-100 dark:focus:border-primary"
+              type="file"
+              id="formFile"
+              (change)="onFileSelected($event)"/>
+          </div>
+        </div>
+
+        <button type="button"
+                class="mt-4 inline-block shrink-0 rounded-md border border-yellow-500 bg-yellow-500 px-12 py-3 text-sm font-medium text-white transition hover:bg-transparent hover:text-yellow-500 focus:outline-none active:text-blue-500"
+                (click)="uploadImage()"
+                [ngClass]="{'disabledBtn': !file, 'focus:ring': file}"
+        >
+          Upload Image
+        </button>
+      </form>
+    </div>
+
+    <div class="py-5">
+      <h2 class="text-2xl pb-5">Delete Account</h2>
+      <p class="pb-5">Are you sure to delete your account? Account-specific information is lost,
+        however your former contributions will still be reachable by other users. After deletion, you will be logged
+        out and redirected to the login page.</p>
+      <button
+        class="inline-block shrink-0 rounded-md border border-yellow-500 bg-red-500 px-12 py-3 text-sm font-medium text-white transition hover:bg-transparent hover:text-red-500 focus:outline-none focus:ring active:text-blue-500"
+        (click)="deleteAccount()">
+        Delete Account
+      </button>
+      <p class="warning-text py-5">Warning: This action cannot be undone.</p>
+    </div>
+  </div>
+</div>

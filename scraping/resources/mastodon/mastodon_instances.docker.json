@@ -1,0 +1,18 @@
+[
+  {
+    "name": "Mastodon Online",
+    "api_url": "https://mastodon.online/api/v1/",
+    "max_tags_per_page": 20,
+    "max_tags_total": 20,
+    "max_statuses_per_page": 20,
+    "max_statuses_total": 20
+  },
+  {
+    "name": "Mastodon Local",
+    "api_url": "http://mastodon/api/v1/",
+    "max_tags_per_page": 20,
+    "max_tags_total": 20,
+    "max_statuses_per_page": 20,
+    "max_statuses_total": 20
+  }
+]

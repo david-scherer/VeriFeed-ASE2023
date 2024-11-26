@@ -1,0 +1,19 @@
+<app-header
+  *ngIf="this.router.url === '/' || this.router.url.match('/postings*')"
+  [ngClass]="{'fixed': this.router.url.match('/postings*'), 'w-full' : this.router.url.match('/postings*')}"
+></app-header>
+<app-header-internal
+  *ngIf="
+    this.router.url !== '/login' &&
+    this.router.url !== '/register' &&
+    this.router.url !== '/' &&
+    this.router.url !== '/postings' &&
+    this.authService.isLoggedIn()
+  "
+  [ngClass]="{'fixed': this.router.url.match('/internal*'), 'w-full' : this.router.url.match('/internal*')}"
+></app-header-internal>
+<router-outlet></router-outlet>
+<app-footer
+  *ngIf="this.router.url !== '/login' && this.router.url !== '/register' && !this.router.url.match('/postings*') && !this.router.url.match('/internal*')"
+></app-footer>
+<app-notification-banner> </app-notification-banner>

@@ -1,0 +1,24 @@
+<div
+  infiniteScroll
+  [infiniteScrollDistance]="scrollDistance"
+  [infiniteScrollUpDistance]="scrollUpDistance"
+  [infiniteScrollThrottle]="throttle"
+  (scrolled)="onScrollDown()"
+  class="pb-5 middle pt-40"
+  *ngIf="dispayedPosts.length !== 0"
+>
+  <div
+    class="pb-4 border rounded-lg p-6 max-w-2xl m-2"
+    *ngFor="let posting of dispayedPosts"
+  >
+    <app-post [posting]="posting"></app-post>
+  </div>
+</div>
+
+<div class="grid h-screen place-content-center bg-white px-4" *ngIf="(dispayedPosts.length === 0) && !loading">
+  <h1 class="uppercase tracking-widest text-gray-500">No Posts found</h1>
+</div>
+
+<div class="grid h-screen place-content-center bg-white px-4" *ngIf="loading">
+  <h1 class="uppercase tracking-widest text-gray-500">Loading...</h1>
+</div>

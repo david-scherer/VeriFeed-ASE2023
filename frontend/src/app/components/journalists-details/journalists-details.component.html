@@ -1,0 +1,155 @@
+<div class="p-10">
+
+  <div class="flex items-center pb-6 gap-5">
+    <img
+      alt="profile picture"
+      [src]="getProfileImg()"
+      class="h-32 w-32 rounded-lg object-cover shadow-sm"
+    />
+
+    <div>
+      <h1 class="text-3xl">{{ journalist?.firstName }} {{ journalist?.lastName }}</h1>
+      <p *ngIf="journalist?.verified" class="text-yellow-500">A verified journalist</p>
+      <p *ngIf="!journalist?.verified" class="text-yellow-500">An unverified journalist</p>
+    </div>
+
+  </div>
+  <div *ngIf="journalist?.publishesFor !== [] || journalist?.adminOf" class="py-5">
+    <h2 class="text-2xl pb-6">Affiliations</h2>
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-5">
+      <div *ngIf="journalist?.adminOf">
+        <a
+          href="/affiliations/{{journalist?.adminOf?.id}}"
+          class="relative block overflow-hidden rounded-lg border border-gray-100 p-4 sm:p-6 lg:p-8"
+        >
+  <span
+    class="absolute inset-x-0 bottom-0 h-2 bg-gradient-to-r from-green-300 via-blue-500 to-purple-600"
+  ></span>
+
+          <div class="sm:flex sm:justify-between sm:gap-4">
+            <div>
+              <h3 class="text-lg font-bold text-gray-900 sm:text-xl">
+                Owner of {{ journalist?.adminOf?.name }}
+              </h3>
+
+              <p class="mt-1 text-xs font-medium text-gray-600">{{ journalist?.adminOf?.address }}</p>
+            </div>
+
+            <div class="hidden sm:block sm:shrink-0">
+              <img
+                alt="Paul Clapton"
+                src="assets/favicon.jpg"
+                class="h-16 w-16 rounded-lg object-cover shadow-sm"
+              />
+            </div>
+          </div>
+        </a>
+      </div>
+      <div *ngFor="let affiliation of journalist?.publishesFor">
+        <a
+          href="/affiliations/{{affiliation.id}}"
+          class="relative block overflow-hidden rounded-lg border border-gray-100 p-4 sm:p-6 lg:p-8"
+        >
+  <span
+    class="absolute inset-x-0 bottom-0 h-2 bg-gradient-to-r from-green-300 via-blue-500 to-purple-600"
+  ></span>
+
+          <div class="sm:flex sm:justify-between sm:gap-4">
+            <div>
+              <h3 class="text-lg font-bold text-gray-900 sm:text-xl">
+                {{ affiliation.name }}
+              </h3>
+
+              <p class="mt-1 text-xs font-medium text-gray-600">{{ affiliation.address }}</p>
+            </div>
+
+            <div class="hidden sm:block sm:shrink-0">
+              <img
+                alt="Paul Clapton"
+                src="assets/favicon.jpg"
+                class="h-16 w-16 rounded-lg object-cover shadow-sm"
+              />
+            </div>
+          </div>
+        </a>
+      </div>
+    </div>
+  </div>
+  <div class="py-5">
+    <h2 class="text-2xl pb-6">Verification Details</h2>
+    <div class="flow-root rounded-lg border border-gray-100 py-3 shadow-sm">
+      <dl class="-my-3 divide-y divide-gray-100 text-sm">
+        <div class="grid grid-cols-1 gap-1 p-3 sm:grid-cols-3 sm:gap-4">
+          <dt class="font-medium text-gray-900">Employer</dt>
+          <dd class="text-gray-700 sm:col-span-2">{{ journalist?.journalistVerificationDetails?.employer }}</dd>
+        </div>
+
+        <div class="grid grid-cols-1 gap-1 p-3 sm:grid-cols-3 sm:gap-4">
+          <dt class="font-medium text-gray-900">External distribution reach</dt>
+          <dd class="text-gray-700 sm:col-span-2">{{ journalist?.journalistVerificationDetails?.distributionReach }}</dd>
+        </div>
+
+        <div class="grid grid-cols-1 gap-1 p-3 sm:grid-cols-3 sm:gap-4">
+          <dt class="font-medium text-gray-900">Main medium</dt>
+          <dd class="text-gray-700 sm:col-span-2">{{ journalist?.journalistVerificationDetails?.mainMedium }}</dd>
+        </div>
+
+        <div class="grid grid-cols-1 gap-1 p-3 sm:grid-cols-3 sm:gap-4">
+          <dt class="font-medium text-gray-900">Reference</dt>
+          <dd class="text-gray-700 sm:col-span-2"><a
+            [href]="journalist?.journalistVerificationDetails?.reference">{{ journalist?.journalistVerificationDetails?.reference }}</a></dd>
+        </div>
+
+        <div class="grid grid-cols-1 gap-1 p-3 sm:grid-cols-3 sm:gap-4"
+             *ngIf="authenticationService.getUserRole() == UserRoles.ADMIN">
+          <dt class="font-medium text-gray-900">Request message</dt>
+          <dd class="text-gray-700 sm:col-span-2">
+            {{ journalist?.journalistVerificationDetails?.message }}
+          </dd>
+        </div>
+      </dl>
+    </div>
+  </div>
+  <div class="py-5" *ngIf="isAdminOfAffiliation">
+    <h2 class="text-2xl pb-6"
+        *ngIf="journalist?.verified && authenticationService.getUserRole() == UserRoles.JOURNALIST">
+      Affiliation management</h2>
+    <div class="pt-8 flex-row space-x-4"
+         *ngIf="journalist?.verified && authenticationService.getUserRole() == UserRoles.JOURNALIST">
+      <button
+        (click)="addToAffiliation()"
+        class="inline-block shrink-0 rounded-md border border-yellow-500 bg-yellow-500 px-12 py-3 text-sm font-medium text-white transition hover:bg-transparent hover:text-yellow-500 focus:outline-none focus:ring active:text-blue-500"
+        *ngIf="!belongsJournalistAffiliation"
+      >
+        Add to my group
+      </button>
+
+      <button
+        (click)="removeFromAffiliation()"
+        class="inline-block shrink-0 rounded-md border border-yellow-500 bg-yellow-500 px-12 py-3 text-sm font-medium text-white transition hover:bg-transparent hover:text-yellow-500 focus:outline-none focus:ring active:text-blue-500"
+        *ngIf="belongsJournalistAffiliation"
+      >
+        Remove from my group
+      </button>
+    </div>
+  </div>
+  <div class="py-5" *ngIf="authenticationService.getUserRole() === UserRoles.ADMIN">
+    <h2 class="text-2xl pb-6">Verification</h2>
+    <div class="pt-8 flex-row space-x-4">
+      <button *ngIf="!journalist?.verified"
+              (click)="verify()"
+              class="inline-block shrink-0 rounded-md border border-green-500 bg-green-500 px-12 py-3 text-sm font-medium text-white transition hover:bg-transparent hover:text-green-500 focus:outline-none focus:ring active:text-green-500"
+      >
+        Verify
+      </button>
+
+      <button
+        *ngIf="journalist?.verified"
+        (click)="revokeVerification()"
+        class="inline-block shrink-0 rounded-md border border-red-500 bg-red-500 px-12 py-3 text-sm font-medium text-white transition hover:bg-transparent hover:text-red-500 focus:outline-none focus:ring active:text-blue-500"
+      >
+        Unverify
+      </button>
+    </div>
+  </div>
+</div>

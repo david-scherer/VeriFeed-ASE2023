@@ -1,0 +1,35 @@
+<div class="p-10">
+  <h1 class="text-3xl pb-6">Unverified Affiliations</h1>
+  <div class="flex-row">
+    <div class="overflow-x-auto rounded-lg border border-gray-200">
+      <table class="min-w-full divide-y-2 divide-gray-200 bg-white text-sm">
+        <thead class="text-left">
+          <th class="whitespace-nowrap px-4 py-2 font-medium text-gray-900">
+            Name
+          </th>
+          <th class="whitespace-nowrap px-4 py-2 font-medium text-gray-900">
+            URL
+          </th>
+          <th class="whitespace-nowrap px-4 py-2 font-medium text-gray-900">
+            Verify
+          </th>
+          <th class="whitespace-nowrap px-4 py-2 font-medium text-gray-900">
+            Details
+          </th>
+        </thead>
+
+        <tbody class="divide-y divide-gray-200">
+        <tr *ngFor="let affiliation of affiliations">
+          <td class="whitespace-nowrap px-4 py-2 font-medium text-gray-900">{{affiliation.name}}
+          </td>
+          <td class="whitespace-nowrap px-4 py-2 text-gray-700"><a href="{{affiliation.address}}"
+                                                                   target="_blank">{{affiliation.address}}</a></td>
+          <td class="whitespace-nowrap px-4 py-2 text-gray-700"><button class="italic" (click)="verifyAffiliation(affiliation.id)">Verify</button></td>
+          <td class="whitespace-nowrap px-4 py-2 text-gray-700"><a class="italic" href="/affiliations/{{affiliation.id}}">Details</a>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

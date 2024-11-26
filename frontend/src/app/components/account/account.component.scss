@@ -1,0 +1,17 @@
+.disabledBtn {
+  background: gray;
+  border: none;
+  cursor: auto;
+}
+
+.disabledBtn:hover {
+  color: white;
+}
+
+.disabledBtn:focus {
+  outline: none;
+}
+
+.disabledBtn:active {
+  outline: none;
+}
