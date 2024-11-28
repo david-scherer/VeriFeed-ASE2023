@@ -1,0 +1,34 @@
+pre-commit:
+  parallel: true
+
+  commands:
+    frontend-lint-staged:
+      root: "frontend/"
+      run: npm run lint-staged
+
+    extraction-linter:
+      root: "extraction/"
+      glob: "*.py"
+      run: ./venv/bin/pylint {staged_files}
+    extraction-formatter:
+      root: "extraction/"
+      glob: "*.py"
+      run: ./venv/bin/black {staged_files}
+
+    recognition-linter:
+      root: "recognition/"
+      glob: "*.py"
+      run: ./venv/bin/pylint {staged_files}
+    recognition-formatter:
+      root: "recognition/"
+      glob: "*.py"
+      run: ./venv/bin/black {staged_files}
+
+    scraping-linter:
+      root: "scraping/"
+      glob: "*.py"
+      run: ./venv/bin/pylint {staged_files}
+    scraping-formatter:
+      root: "scraping/"
+      glob: "*.py"
+      run: ./venv/bin/black {staged_files}

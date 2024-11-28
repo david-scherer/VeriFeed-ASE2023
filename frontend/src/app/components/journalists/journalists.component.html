@@ -1,0 +1,37 @@
+<div class="p-5">
+  <div class="sm:hidden">
+    <label for="Tab" class="sr-only">Tab</label>
+
+    <select id="Tab" class="w-full rounded-md border-gray-200" onchange="location = this.value;">
+      <option value="/journalists">Verified Journalists</option>
+      <option value="/journalists/unverified" *ngIf="authService.getUserRole() === UserRoles.ADMIN">Unverified Journalists</option>
+      <option value="/journalists/requests" *ngIf="authService.getUserRole() === UserRoles.JOURNALIST">Verification requests</option>
+    </select>
+  </div>
+
+  <div class="hidden sm:block">
+    <nav class="flex gap-6" aria-label="Tabs">
+      <a
+        href="/journalists"
+        class="shrink-0 rounded-lg p-2 text-sm font-medium text-gray-500 hover:bg-gray-50 hover:text-gray-700"
+      >
+        Verified Journalists
+      </a>
+
+      <a
+        href="/journalists/unverified" *ngIf="authService.getUserRole() === UserRoles.ADMIN"
+        class="shrink-0 rounded-lg p-2 text-sm font-medium text-gray-500 hover:bg-gray-50 hover:text-gray-700"
+      >
+        Unverified Journalists
+      </a>
+      <a
+        href="/journalists/requests" *ngIf="authService.getUserRole() === UserRoles.JOURNALIST"
+        class="shrink-0 rounded-lg p-2 text-sm font-medium text-gray-500 hover:bg-gray-50 hover:text-gray-700"
+      >
+        Verification requests
+      </a>
+    </nav>
+  </div>
+</div>
+
+<router-outlet></router-outlet>

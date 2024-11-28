@@ -1,0 +1,62 @@
+version: "3"
+services:
+  db:
+    image: postgres:14.1-alpine
+    restart: always
+    ports:
+      - "${POSTGRES_PORT:-5432}:${POSTGRES_PORT:-5432}"
+    volumes:
+      - db:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_PORT=5432
+  mailserver:
+    image: maildev/maildev
+    restart: always
+    ports:
+      - "1025:1025"
+      - "1080:1080"
+  frontend:
+    build:
+      dockerfile: frontend/Dockerfile-dev
+    volumes:
+      - "./frontend:/usr/src/app"
+    ports:
+      - "4200:4200"
+    command: >
+      bash -c "npm install && ng serve --host 0.0.0.0 --port 4200"
+
+  core:
+    build:
+      dockerfile: Dockerfile-dev
+      context: ./core
+    ports:
+      - "8080:8080"
+    environment:
+      - MAIL_HOST=mailserver
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/postgres
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=postgres
+    depends_on:
+      - db
+      - mailserver
+  extraction:
+    container_name: extraction
+    build: ./extraction
+    ports:
+      - "5001:5000"
+  recognition:
+    container_name: recognition
+    build: ./recognition
+    ports:
+      - "5002:5000"
+  scraping:
+    container_name: scraping
+    build: ./scraping
+    ports:
+      - "5003:5000"
+
+volumes:
+  db:
+    driver: local

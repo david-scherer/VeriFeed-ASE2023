@@ -1,0 +1,5 @@
+FROM redis:7-alpine
+
+WORKDIR /data
+
+COPY ./data/dump.rdb /data

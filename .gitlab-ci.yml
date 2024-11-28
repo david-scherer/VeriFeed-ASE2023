@@ -1,0 +1,91 @@
+image: registry.reset.inso-w.at/pub/docker/mvn-non-root-17
+
+variables:
+  GIT_STRATEGY: "clone"
+  MAVEN_OPTS: "-Dmaven.repo.local=.m2"
+
+stages:
+  - test
+  - build
+  - deploy
+
+#----------------------
+#Test
+
+test-core:
+  stage: test
+  only:
+    changes:
+      - "core/**/*"
+  script:
+    - cd core
+    - mvn -B clean install
+
+test-frontend:
+  image: node:lts
+  stage: test
+  only:
+    changes:
+      - "frontend/**/*"
+  script:
+    - apt -y update && apt -y install wget
+    - wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+    - apt -y install ./google-chrome-stable_current_amd64.deb
+    - cd frontend
+    - npm i && npm run test:ci
+
+test-scraping:
+  image: python:3.12
+  stage: test
+  only:
+    changes:
+      - "scraping/**/*"
+  script:
+    - cd scraping
+    - pip install --no-cache-dir -r requirements.txt
+    - python -m unittest discover -s tests
+
+test-extraction:
+  image: python:3.12
+  stage: test
+  only:
+    changes:
+      - "extraction/**/*"
+  script:
+    - cd extraction
+    - pip install --no-cache-dir -r requirements.txt
+    - python -m unittest discover -s tests
+
+#----------------------
+#Build
+
+build-core:
+  stage: build
+  script:
+    - cd core
+    - mvn clean package
+    - mvn -B jib:build -Djib.to.image=registry.reset.inso-w.at/$CI_PROJECT_PATH -Djib.to.tags=$CI_PIPELINE_ID -Djib.to.auth.username=$CI_REGISTRY_USER -Djib.to.auth.password=$CI_REGISTRY_PASSWORD
+  only:
+    - master
+
+build-scraping:
+  image: python:3.12
+  stage: build
+  script:
+    - pip install -r scraping/requirements.txt
+    - python scraping/main.py
+  only:
+    - master
+
+#----------------------
+#Deploy
+
+deploy-qa:
+  stage: deploy
+  image: bitnami/kubectl
+  script:
+    - sed -i 's/:latest/:'$CI_PIPELINE_ID'/g' kubernetes.yaml
+    - cat kubernetes.yaml
+    - kubectl apply -f kubernetes.yaml
+  only:
+    - master

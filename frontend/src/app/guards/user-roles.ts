@@ -1,0 +1,4 @@
+
+export enum UserRoles {
+  ADMIN= "ADMIN", USER = "USER", JOURNALIST = "JOURNALIST", UNDEFINED = "UNDEFINED"
+}

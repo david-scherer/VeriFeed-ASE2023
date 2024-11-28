@@ -1,0 +1,76 @@
+# Core
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: 23ws-ase-pr-inso-01-core
+  namespace: 23ws-ase-pr-inso-01
+spec:
+  selector:
+    matchLabels:
+      app: 23ws-ase-pr-inso-01-core
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: 23ws-ase-pr-inso-01-core
+    spec:
+      containers:
+        - name: 23ws-ase-pr-inso-01-core
+          image: registry.reset.inso-w.at/2023ws-ase-pr-group/23ws-ase-pr-inso-01/core:latest
+          resources:
+            requests:
+              memory: "128Mi"
+              cpu: "10m"
+              ephemeral-storage: "100Mi"
+            limits:
+              memory: "280Mi"
+              cpu: "500m"
+              ephemeral-storage: "100Mi"
+          ports:
+            - containerPort: 8080
+          livenessProbe:
+            httpGet:
+              port: 8080
+              path: /health
+            initialDelaySeconds: 3
+            periodSeconds: 3
+          readinessProbe:
+            httpGet:
+              port: 8080
+              path: /health
+            initialDelaySeconds: 3
+            periodSeconds: 3
+          startupProbe:
+            httpGet:
+              port: 8080
+              path: /health
+            initialDelaySeconds: 3
+            periodSeconds: 5
+            failureThreshold: 120
+          lifecycle:
+            preStop:
+              httpGet:
+                port: 8080
+                path: /health/prepareShutdown
+      imagePullSecrets:
+        - name: secret-dockercfg
+  revisionHistoryLimit: 2
+  strategy:
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 2
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: s-23ws-ase-pr-inso-01-core-service
+  namespace: 23ws-ase-pr-inso-01
+spec:
+  type: ClusterIP
+  clusterIP: None
+  selector:
+    app: 23ws-ase-pr-inso-01-core
+  ports:
+    - port: 8080
+      protocol: TCP
+      targetPort: 8080

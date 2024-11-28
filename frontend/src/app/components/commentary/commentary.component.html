@@ -1,0 +1,225 @@
+<article
+  class="flex max-w-xl flex-col items-start justify-between m-4 w-full overflow-auto"
+  *ngIf="!deleted"
+>
+  <div class="flex justify-between w-full">
+    <div class="flex items-center gap-x-4 text-xs">
+      <time datetime="2020-03-16" class="text-gray-500">{{
+        date.toLocaleString()
+      }}</time>
+      <span class="text-gray-500" *ngIf="commentary.version > 1">
+        (edited)
+      </span>
+      <a
+        [href]="affiliation.address"
+        class="relative z-10 rounded-full bg-gray-50 px-3 py-1.5 font-medium text-gray-600 hover:bg-gray-100"
+        *ngFor="let affiliation of commentary.publishedBy.publishesFor"
+        >{{affiliation.name}}</a
+      >
+    </div>
+
+    <span
+      class="inline-flex overflow-hidden rounded-md border bg-white shadow-sm"
+      *ngIf="canEdit"
+    >
+      <button
+        class="inline-block border-e p-3 text-gray-700 hover:bg-gray-50 focus:relative"
+        title="Edit Product"
+        (click)="startEdit()"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke-width="1.5"
+          stroke="currentColor"
+          class="h-4 w-4"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10"
+          />
+        </svg>
+      </button>
+
+      <button
+        class="inline-block p-3 text-gray-700 hover:bg-gray-50 focus:relative"
+        title="Delete Product"
+        (click)="deleteCommentary()"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke-width="1.5"
+          stroke="currentColor"
+          class="h-4 w-4"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"
+          />
+        </svg>
+      </button>
+    </span>
+  </div>
+
+  <div class="flex items-center gap-x-4  cursor-pointer" (click)="searchJournalist(commentary.publishedBy.id)">
+    <img
+      alt="profile picture"
+      [src]="getProfileImg()"
+      class="h-10 w-10 rounded-full object-cover"
+    />
+    <div class="text-sm leading-6">
+      <p class="font-semibold text-gray-900">
+        <a>
+          <div *ngIf="commentary.publishedBy">
+            {{ commentary.publishedBy.firstName }}
+            {{ commentary.publishedBy.lastName }}
+          </div>
+          <div *ngIf="!commentary.publishedBy">Unknown</div>
+        </a>
+      </p>
+    </div>
+  </div>
+
+  <div class="group" style="width: 100%">
+    <div *ngIf="editMode" style="width: 100%">
+      <label for="NewComment" class="sr-only">New Comment</label>
+
+      <div
+        class="overflow-hidden rounded-lg border border-gray-200 shadow-sm focus-within:border-blue-600 focus-within:ring-1 focus-within:ring-blue-600"
+      >
+        <textarea
+          id="NewComment"
+          class="w-full resize-none border-none align-top focus:ring-0 sm:text-sm"
+          rows="4"
+          placeholder="Enter any additional comments..."
+          [(ngModel)]="commentary.text"
+        ></textarea>
+
+        <div class="flex items-center justify-end gap-2 bg-white p-3">
+          <button
+            type="button"
+            class="rounded bg-gray-200 px-3 py-1.5 text-sm font-medium text-gray-700 hover:text-gray-600"
+            (click)="cancelEdit()"
+          >
+            Cancel
+          </button>
+
+          <button
+            type="button"
+            class="rounded bg-indigo-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-indigo-700"
+            (click)="editComment()"
+          >
+            Save
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <p
+      class="mt-5 line-clamp-3 text-sm leading-6 text-gray-600"
+      *ngIf="!editMode"
+    >
+      {{ commentary.text }}
+    </p>
+  </div>
+
+  <span
+    class="inline-flex overflow-hidden rounded-md border bg-white shadow-sm mt-5"
+  >
+    <button
+      class="inline-block border-e p-1 text-gray-700 hover:bg-gray-50 focus:relative"
+      title="Upvote"
+      (click)="upvoteCommentary()"
+      *ngIf="commentary.vote !== 1"
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="16"
+        height="16"
+        fill="currentColor"
+        class="bi bi-caret-up"
+        viewBox="0 0 16 16"
+      >
+        <path
+          d="M3.204 11h9.592L8 5.519zm-.753-.659 4.796-5.48a1 1 0 0 1 1.506 0l4.796 5.48c.566.647.106 1.659-.753 1.659H3.204a1 1 0 0 1-.753-1.659"
+        />
+      </svg>
+    </button>
+
+    <button
+      class="inline-block border-e p-1 text-gray-700 hover:bg-gray-50 focus:relative"
+      title="Upvote"
+      (click)="unvoteCommentary()"
+      *ngIf="commentary.vote === 1"
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="16"
+        height="16"
+        fill="currentColor"
+        class="bi bi-caret-up-fill"
+        viewBox="0 0 16 16"
+      >
+        <path
+          d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"
+        />
+      </svg>
+    </button>
+
+    <div class="inline-block border-e p-1 text-gray-700 hover:bg-gray-50">
+      {{ commentary.score }}
+    </div>
+
+    <button
+      class="inline-block p-1 text-gray-700 hover:bg-gray-50 focus:relative"
+      title="Downvote"
+      (click)="downvoteCommentary()"
+      *ngIf="commentary.vote !== -1"
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="16"
+        height="16"
+        fill="currentColor"
+        class="bi bi-caret-down"
+        viewBox="0 0 16 16"
+      >
+        <path
+          d="M3.204 5h9.592L8 10.481zm-.753.659 4.796 5.48a1 1 0 0 0 1.506 0l4.796-5.48c.566-.647.106-1.659-.753-1.659H3.204a1 1 0 0 0-.753 1.659"
+        />
+      </svg>
+    </button>
+
+    <button
+      class="inline-block p-1 text-gray-700 hover:bg-gray-50 focus:relative"
+      title="Downvote"
+      (click)="unvoteCommentary()"
+      *ngIf="commentary.vote === -1"
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="16"
+        height="16"
+        fill="currentColor"
+        class="bi bi-caret-down-fill"
+        viewBox="0 0 16 16"
+      >
+        <path
+          d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"
+        />
+      </svg>
+    </button>
+  </span>
+</article>
+
+<article
+  class="flex max-w-xl flex-col items-start justify-between m-4 w-full overflow-auto"
+  *ngIf="deleted"
+>
+  <p>deleted</p>
+</article>

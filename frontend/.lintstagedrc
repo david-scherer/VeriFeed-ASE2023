@@ -1,0 +1,9 @@
+{
+  "*.(ts|html)": [
+    "prettier --write",
+    "eslint"
+  ],
+  "*.(scss|json)": [
+    "prettier --write"
+  ]
+}

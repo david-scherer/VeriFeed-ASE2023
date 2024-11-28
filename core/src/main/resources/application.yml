@@ -1,0 +1,52 @@
+spring:
+  jpa:
+    database: postgresql
+    hibernate:
+      ddl-auto: update
+  datasource:
+    url: jdbc:postgresql://localhost:5432/postgres
+    username: postgres
+    password: postgres
+    sql:
+      init:
+        mode: always
+  profiles:
+    default: production
+  cloud:
+    openfeign:
+      client:
+        config:
+          recognition:
+            url: ${RECOGNITION_HOST:http://localhost:5002/api/v1}
+            connectTimeout: 10000
+            readTimeout: 300000
+          scraping:
+            url: ${SCRAPING_HOST:http://localhost:5003/api/v1}
+            connectTimeout: 10000
+            readTimeout: 30000
+
+security:
+  auth:
+    header: Authorization
+    prefix: "Bearer "
+    login-uri: /api/v1/login
+  jwt:
+    secret: 2b28fad1fb24a11aac35f7d7e4d3035d7a2089aaef0a3747b51c53107e0e6628
+    type: JWT
+    issuer: secure-backend
+    audience: secure-app
+    expiration-time: 43200000
+
+web:
+  frontend:
+    address: http://localhost
+    port: 4200
+  api:
+    base: /api/v1
+
+mail:
+  host: ${MAIL_HOST:localhost}
+  port: ${MAIL_PORT:1025}
+  confirmation:
+    subject: E-Mail Confirmation | VeriFeed
+    sender: verifeed@gmx.at

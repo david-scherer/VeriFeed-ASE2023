@@ -1,0 +1,69 @@
+<div class="p-10">
+  <h1 class="text-3xl">Create a Certificate</h1>
+  <form (ngSubmit)="onSubmit()" class="mt-8 flex-col">
+    <div>
+      <label for="HeadlineAct" class="block text-sm font-medium text-gray-900"> Journalist </label>
+
+      <select
+        name="HeadlineAct"
+        id="HeadlineAct"
+        class="mt-1.5 w-full rounded-lg border-gray-300 text-gray-700 sm:text-sm"
+        [formControl]="journalistFormControl"
+      >
+        <option *ngFor="let journalist of journalists"
+                value="{{journalist.id}}">{{journalist.firstName}} {{journalist.lastName}}</option>
+      </select>
+      <span
+        class="text-red-600 text-xs"
+        *ngIf="explanationFormControl.hasError('required')"
+      >Journalist is required</span>
+    </div>
+    <div class="pb-2.5 pl-2.5 pr-2.5"><label
+      for="explanation"
+      class="block overflow-hidden rounded-md border border-gray-200 px-3 py-2 shadow-sm focus-within:border-blue-600 focus-within:ring-1 focus-within:ring-blue-600"
+    >
+      <span class="text-xs font-medium text-gray-700"> Explanation </span>
+
+      <input
+        type="text"
+        id="explanation"
+        placeholder="Explanation"
+        matInput
+        [formControl]="explanationFormControl"
+        class="mt-1 w-full border-none p-0 focus:border-transparent focus:outline-none focus:ring-0 sm:text-sm"
+      />
+    </label>
+    </div>
+
+    <div class="p-2.5"><label
+      for="url"
+      class="block overflow-hidden rounded-md border border-gray-200 px-3 py-2 shadow-sm focus-within:border-blue-600 focus-within:ring-1 focus-within:ring-blue-600"
+    >
+      <span class="text-xs font-medium text-gray-700"> URL </span>
+
+      <input
+        type="url"
+        id="url"
+        placeholder="Homepage"
+        matInput
+        [formControl]="addressFormControl"
+        [errorStateMatcher]="matcher"
+        class="mt-1 w-full border-none p-0 focus:border-transparent focus:outline-none focus:ring-0 sm:text-sm"
+      />
+    </label>
+      <span
+        class="text-red-600 text-xs"
+        *ngIf="addressFormControl.hasError('pattern')"
+      >Url does not match pattern</span>
+    </div>
+    <div class="p-2.5">
+      <button
+        type="submit"
+        [disabled]="!certificateForm.valid"
+        class="inline-block shrink-0 rounded-md border border-yellow-500 bg-yellow-500 px-12 py-3 text-sm font-medium text-white transition hover:bg-transparent hover:text-yellow-500 focus:outline-none focus:ring active:text-blue-500"
+      >
+        Grant certificate.
+      </button>
+    </div>
+  </form>
+</div>

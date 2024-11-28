@@ -1,0 +1,76 @@
+# Extraction
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: 23ws-ase-pr-inso-01-extraction
+  namespace: 23ws-ase-pr-inso-01
+spec:
+  selector:
+    matchLabels:
+      app: 23ws-ase-pr-inso-01-extraction
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: 23ws-ase-pr-inso-01-extraction
+    spec:
+      containers:
+        - name: 23ws-ase-pr-inso-01-extraction
+          image: registry.reset.inso-w.at/2023ws-ase-pr-group/23ws-ase-pr-inso-01/extraction:latest
+          resources:
+            requests:
+              memory: "128Mi"
+              cpu: "10m"
+              ephemeral-storage: "100Mi"
+            limits:
+              memory: "280Mi"
+              cpu: "500m"
+              ephemeral-storage: "100Mi"
+          ports:
+            - containerPort: 5000
+          livenessProbe:
+            httpGet:
+              port: 5000
+              path: /health
+            initialDelaySeconds: 3
+            periodSeconds: 3
+          readinessProbe:
+            httpGet:
+              port: 5000
+              path: /health
+            initialDelaySeconds: 3
+            periodSeconds: 3
+          startupProbe:
+            httpGet:
+              port: 5000
+              path: /health
+            initialDelaySeconds: 3
+            periodSeconds: 5
+            failureThreshold: 120
+          lifecycle:
+            preStop:
+              httpGet:
+                port: 5000
+                path: /health/prepareShutdown
+      imagePullSecrets:
+        - name: secret-dockercfg
+  revisionHistoryLimit: 2
+  strategy:
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 2
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: s-23ws-ase-pr-inso-01-extraction-service
+  namespace: 23ws-ase-pr-inso-01
+spec:
+  type: ClusterIP
+  clusterIP: None
+  selector:
+    app: 23ws-ase-pr-inso-01-extraction
+  ports:
+    - port: 5001
+      protocol: TCP
+      targetPort: 5000

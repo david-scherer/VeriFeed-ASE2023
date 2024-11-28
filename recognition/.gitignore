@@ -1,0 +1,7 @@
+venv
+.cache
+logs
+*.hurl
+
+resources/BERTopic_model
+resources/topic_count.txt

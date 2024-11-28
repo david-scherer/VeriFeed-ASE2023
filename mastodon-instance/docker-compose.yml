@@ -1,0 +1,54 @@
+version: "3"
+services:
+  db:
+    restart: always
+    image: postgres:14-alpine
+    shm_size: 256mb
+    ports:
+      - "5433:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./backup.dump:/docker-entrypoint-initdb.d/backup.dump
+      - ./restore.sh:/docker-entrypoint-initdb.d/restore.sh
+    environment:
+      - POSTGRES_HOST_AUTH_METHOD=trust
+      - POSTGRES_DB=mastodon_development
+      - POSTGRES_USER=verifeed
+    networks:
+      - mastonet
+
+  redis:
+    restart: always
+    build:
+      context: ./redis/
+      dockerfile: Dockerfile.redis
+    #image: redis:7-alpine
+    networks:
+      - mastonet
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+    #volumes:
+    #  - ./redis/data:/data
+
+  mastodon:
+    restart: always
+    build:
+      context: .
+    ports:
+      - "3000:80"
+    networks:
+      - mastonet
+    environment:
+      - WEB_DOMAIN=mastodon
+    depends_on:
+      - db
+      - redis
+
+volumes:
+  pgdata:
+
+networks:
+  mastonet:
+    name: mastodon-instance_mastonet
+    external: true
+

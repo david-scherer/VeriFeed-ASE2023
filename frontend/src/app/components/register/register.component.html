@@ -1,0 +1,180 @@
+<section class="bg-white">
+  <div class="lg:grid lg:min-h-screen lg:grid-cols-12">
+    <aside
+      class="relative block h-16 lg:order-last lg:col-span-5 lg:h-full xl:col-span-6"
+    >
+      <img
+        alt="Pattern"
+        src="assets/background-sign-in-up.png"
+        class="absolute inset-0 h-full w-full object-cover"
+      />
+    </aside>
+
+    <main
+      class="flex items-center justify-center px-8 py-8 sm:px-12 lg:col-span-7 lg:px-16 lg:py-12 xl:col-span-6"
+    >
+      <div class="max-w-xl lg:max-w-3xl">
+        <a class="block text-yellow-500" href="/">
+          <span class="sr-only">Home</span>
+          <img
+            src="assets/logo_black.png"
+            class="h-8 sm:h-10"
+            alt="Logo VeriFeed"
+          />
+        </a>
+
+        <h1
+          class="mt-6 text-2xl font-bold text-gray-900 sm:text-3xl md:text-4xl"
+        >
+          Welcome to VeriFeed 📰
+        </h1>
+
+        <p class="mt-4 leading-relaxed text-gray-500">
+          Become a member of a revolutionary platform dedicated to combating the
+          spread of false or propagandistic information on social media.
+        </p>
+
+        <form (ngSubmit)="onSubmit()" [formGroup]="userForm" class="mt-8 grid grid-cols-6 gap-6">
+
+          <div class="col-span-6">
+            <label
+              for="username"
+              class="block text-sm font-medium text-gray-700"
+            >Username</label
+            >
+            <input
+              id="username"
+              class="mt-1 w-full rounded-md border-gray-200 bg-white text-sm text-gray-700 shadow-sm"
+              type="text"
+              matInput
+              formControlName="username"
+              [errorStateMatcher]="matcher"
+              placeholder="Enter your username"
+            />
+            <span
+              class="text-red-600 text-xs"
+              *ngIf="userForm.hasError('required','username')"
+            >Username is required</span
+            >
+          </div>
+
+          <div class="col-span-6">
+            <label for="email" class="block text-sm font-medium text-gray-700"
+            >Email</label
+            >
+            <input
+              id="email"
+              class="mt-1 w-full rounded-md border-gray-200 bg-white text-sm text-gray-700 shadow-sm"
+              type="email"
+              matInput
+              formControlName="email"
+              [errorStateMatcher]="matcher"
+              placeholder="Enter your e-mail"
+            />
+            <span
+              class="text-red-600 text-xs"
+              *ngIf="userForm.hasError('email','email')"
+            >
+              Please enter a valid email address
+            </span>
+            <span
+              class="text-red-600 text-xs"
+              *ngIf="userForm.hasError('required', 'email')"
+            >Email is required</span
+            >
+          </div>
+
+          <div class="col-span-6 sm:col-span-3">
+            <label
+              for="password"
+              class="block text-sm font-medium text-gray-700"
+            >Password</label
+            >
+            <input
+              id="password"
+              class="mt-1 w-full rounded-md border-gray-200 bg-white text-sm text-gray-700 shadow-sm"
+              type="password"
+              matInput
+              formControlName="password"
+              [errorStateMatcher]="matcher"
+              placeholder="Enter your password"
+            />
+            <span
+              class="text-red-600 text-xs"
+              *ngIf="userForm.hasError('required', 'password')"
+            >Password is required</span
+            >
+          </div>
+
+          <div class="col-span-6 sm:col-span-3">
+            <label
+              for="repPassword"
+              class="block text-sm font-medium text-gray-700"
+            >Repeat Password</label
+            >
+            <input
+              id="repPassword"
+              class="mt-1 w-full rounded-md border-gray-200 bg-white text-sm text-gray-700 shadow-sm"
+              type="password"
+              matInput
+              formControlName="repeatPassword"
+              [errorStateMatcher]="matcher"
+              placeholder="Confirm your password"
+            />
+            <span
+              class="text-red-600 text-xs"
+              *ngIf="userForm.hasError('required', 'repeatPassword')"
+            >Confirm your password</span
+            >
+            <span
+              class="text-red-600 text-xs"
+              *ngIf="passwordMatchError"
+            >Passwords do not match</span>
+          </div>
+
+          <div class="col-span-6">
+            <label for="MarketingAccept" class="flex gap-4">
+              <input
+                type="checkbox"
+                id="MarketingAccept"
+                name="marketing_accept"
+                class="h-5 w-5 rounded-md border-gray-200 bg-white shadow-sm"
+              />
+
+              <span class="text-sm text-gray-700">
+                I want to receive emails about events, product updates and
+                company announcements.
+              </span>
+            </label>
+          </div>
+
+          <div class="col-span-6">
+            <p class="text-sm text-gray-500">
+              By creating an account, you agree to our
+              <a href="#" class="text-gray-700 underline">
+                terms and conditions
+              </a>
+              and
+              <a href="#" class="text-gray-700 underline">privacy policy</a>.
+            </p>
+          </div>
+
+          <div class="col-span-6 sm:flex sm:items-center sm:gap-4">
+            <button
+              type="submit"
+              [disabled]="!userForm.valid"
+              class="inline-block shrink-0 rounded-md border border-yellow-500 bg-yellow-500 px-12 py-3 text-sm font-medium text-white transition hover:bg-transparent hover:text-yellow-500 focus:outline-none focus:ring active:text-blue-500"
+            >
+              Create an account
+            </button>
+
+            <p class="mt-4 text-sm text-gray-500 sm:mt-0">
+              Already have an account?
+              <a href="/login" class="text-gray-700 underline">Log in</a>.
+            </p>
+          </div>
+        </form>
+      </div>
+    </main>
+  </div>
+</section>
