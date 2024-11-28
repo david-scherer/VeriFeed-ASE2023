@@ -1,5 +1,26 @@
 # VeriFeed
 
+## Backend Workflow (Microservice Pipeline)
+
+### Scraping service:
+This service contains specific services per each platform but is written generic to be compatible with VeriFeed. Specifically, it has two major tasks:
+1. perform the scraping by leveraging trending topic APIs (e.g. Mastodon: https://docs.joinmastodon.org/methods/trends/)
+2. Transforming the platform-specific representation of the content to a harmonised format that is understood by subsequent services of our platform
+
+### Extraction service:
+The extraction service receives the scraped postings and serves as a filter to extract content that is relevant and appropriate for our platform. This includes the following criteria:
+* Journalistic relevance (e.g. internal politics, conflicts instead of pets content)
+* Sentiment analysis
+* Timely relevance
+
+### Posting Recognition service:
+The extracted content is processed by this service, which has two major tasks:
+* Redundancy check: Equivalent postings/content or postings with only negligible difference are discarded to avoid redundant check. Relevance can be increased by an occurrence measure.
+* Topic Modelling: Using ML based approaches to assign topic values to each posting. This is used for grouping purposes.
+
+### Backend service:
+This component is responsible for persisting the content and for processing and serving it to the frontend.
+
 ## Development setup
 
 Code quality pre-commit is ensured through linters and formatters such as Prettier, ESLint, black, and Pylint. These need to be installed within the directories of the services (through virtualenvs in Python, node_modules in frontend, etc.).
